@@ -114,11 +114,12 @@ class LinkedAltPlusMinusView(ctx : Context) : View(ctx) {
             paint.color = Color.WHITE
             paint.strokeWidth = Math.min(w, h) / 60
             paint.strokeCap = Paint.Cap.ROUND
+            val index : Int = i % 2
             canvas.save()
-            canvas.translate((i-1) * gap - gap/6 + gap * state.scales[0], h/2)
+            canvas.translate((i) * gap - gap/6 + gap * state.scales[0], h/2)
             for (j in 0..1) {
                 canvas.save()
-                canvas.rotate(90f * j * (i + ((1 - 2 * i) * state.scales[1])))
+                canvas.rotate(90f * j * (index + ((1 - 2 * index) * state.scales[1])))
                 canvas.drawLine(-gap/6, 0f, gap/6, 0f, paint)
                 canvas.restore()
             }
