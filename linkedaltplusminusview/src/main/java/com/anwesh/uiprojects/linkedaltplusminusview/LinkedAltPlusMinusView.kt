@@ -9,6 +9,7 @@ import android.view.View
 import android.view.MotionEvent
 import android.graphics.*
 import android.content.Context
+import android.content.pm.ActivityInfo
 
 val LAPM_NODES : Int = 5
 
@@ -199,6 +200,7 @@ class LinkedAltPlusMinusView(ctx : Context) : View(ctx) {
 
         fun create(activity : Activity) : LinkedAltPlusMinusView {
             val view : LinkedAltPlusMinusView = LinkedAltPlusMinusView(activity)
+            activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
             activity.setContentView(view)
             return view
         }
