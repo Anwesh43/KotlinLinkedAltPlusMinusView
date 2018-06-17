@@ -9,6 +9,8 @@ import android.view.MotionEvent
 import android.graphics.*
 import android.content.Context
 
+val LAPM_NODES : Int = 5
+
 class LinkedAltPlusMinusView(ctx : Context) : View(ctx) {
 
     private val paint : Paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -77,6 +79,68 @@ class LinkedAltPlusMinusView(ctx : Context) : View(ctx) {
             if (animated) {
                 animated = false
             }
+        }
+    }
+
+    data class LAPMNode(var i : Int) {
+
+        private val state : State = State()
+
+        private var curr : LAPMNode? = null
+
+        private var next : LAPMNode? = null
+
+        private var prev : LAPMNode? = null
+
+        init {
+            addNeighbor()
+        }
+
+        fun addNeighbor() {
+            if (i < LAPM_NODES - 1) {
+                next = LAPMNode(i + 1)
+                next?.prev = this
+            }
+        }
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            val w : Float = canvas.width.toFloat()
+            val h : Float = canvas.height.toFloat()
+            val gap : Float = w / LAPM_NODES
+            prev?.draw(canvas, paint)
+            paint.color = Color.WHITE
+            paint.strokeWidth = Math.min(w, h) / 60
+            paint.strokeCap = Paint.Cap.ROUND
+            canvas.save()
+            canvas.translate((i-1) * gap - gap/6 + gap * state.scales[0], h/2)
+            for (j in 0..1) {
+                canvas.save()
+                canvas.rotate(90f * j * (i + ((1 - 2 * i) * state.scales[1])))
+                canvas.drawLine(-gap/6, 0f, gap/6, 0f, paint)
+                canvas.restore()
+            }
+            canvas.restore()
+
+        }
+
+        fun update(stopcb : (Float) -> Unit) {
+            state.update(stopcb)
+        }
+
+        fun startUpdating(startcb : () -> Unit) {
+            state.startUpdating(startcb)
+        }
+
+        fun getNeighbor(dir : Int, cb : () -> Unit) : LAPMNode {
+            var curr : LAPMNode? = prev
+            if (dir == 1) {
+                curr = next
+            }
+            if (curr != null) {
+                return curr
+            }
+            cb()
+            return this
         }
     }
 }
