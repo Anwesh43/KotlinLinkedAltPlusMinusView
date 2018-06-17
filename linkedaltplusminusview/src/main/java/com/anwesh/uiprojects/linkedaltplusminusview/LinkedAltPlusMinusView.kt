@@ -4,6 +4,7 @@ package com.anwesh.uiprojects.linkedaltplusminusview
  * Created by anweshmishra on 17/06/18.
  */
 
+import android.app.Activity
 import android.view.View
 import android.view.MotionEvent
 import android.graphics.*
@@ -190,6 +191,15 @@ class LinkedAltPlusMinusView(ctx : Context) : View(ctx) {
             linkedAltPlusMinus.startUpdating {
                 animator.start()
             }
+        }
+    }
+
+    companion object {
+
+        fun create(activity : Activity) : LinkedAltPlusMinusView {
+            val view : LinkedAltPlusMinusView = LinkedAltPlusMinusView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
