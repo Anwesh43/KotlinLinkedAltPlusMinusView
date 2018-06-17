@@ -54,7 +54,7 @@ class LinkedAltPlusMinusView(ctx : Context) : View(ctx) {
         }
     }
 
-    data class Animator (var view : View, var animated : Boolean) {
+    data class Animator (var view : View, var animated : Boolean = false) {
 
         fun animate(cb : () -> Unit) {
             if (animated) {
@@ -144,7 +144,7 @@ class LinkedAltPlusMinusView(ctx : Context) : View(ctx) {
         }
     }
 
-    data class LinkedAltPlus(var i : Int) {
+    data class LinkedAltPlusMinus(var i : Int) {
 
         private var curr : LAPMNode = LAPMNode(0)
 
@@ -165,6 +165,29 @@ class LinkedAltPlusMinusView(ctx : Context) : View(ctx) {
 
         fun startUpdating(startcb : () -> Unit) {
             curr.startUpdating(startcb)
+        }
+    }
+
+    data class Renderer(var view : LinkedAltPlusMinusView) {
+
+        private val animator : Animator = Animator(view)
+
+        private val linkedAltPlusMinus : LinkedAltPlusMinus = LinkedAltPlusMinus(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(Color.parseColor("#212121"))
+            linkedAltPlusMinus.draw(canvas, paint)
+            animator.animate {
+                linkedAltPlusMinus.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            linkedAltPlusMinus.startUpdating {
+                animator.start()
+            }
         }
     }
 }
